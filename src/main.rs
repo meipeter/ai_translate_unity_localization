@@ -7,7 +7,7 @@ mod format;
 
 #[tokio::main]
 async fn main() {
-    // 读取输入文件
+    
     let input_file = fs::read_to_string("./Localization.json").expect("Failed to read input file");
     let mut L: format::L = serde_json::from_str(&input_file).expect("Failed to deserialize JSON");
     let lc = Arc::new(Mutex::new(L));
@@ -35,16 +35,16 @@ async fn main() {
         }
     }
 
-    // 等待所有任务完成
+    
     for task in tasks {
         task.await.expect("Task failed");
     }
     
     println!("{:?}",lc);
-    // 将 L 结构体序列化为 JSON
+    
     let output_json = serde_json::to_string_pretty(&*lc.lock().await).expect("Failed to serialize JSON");
     //println!("{}",output_json);
-    // 将输出 JSON 写入文件
+    
     let mut output_file = fs::File::create("./Localization_output.json").expect("Failed to create output file");
     output_file.write_all(output_json.as_bytes()).expect("Failed to write to output file");
 }
